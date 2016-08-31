@@ -17,7 +17,7 @@
 
 Analisar a performance de componentes e elementos atuais built-in da linguagem
 *AdvPL* e realizar testes comparativos (micro benchmarkings) para comparação
-performática. Casos de testes exaustivos são realizados usando componentens
+performática. Casos de testes exaustivos são realizados usando componentes
 equivalentes em sua composição externa, mas com uma implementação interna não
 tão similiar. Para os testes, usamos a biblioteca [`Prelude AdvPL`](https://github.com/nginformatica/prelude-advpl) e o cabeçalho padrão `protheus.ch`.
 
