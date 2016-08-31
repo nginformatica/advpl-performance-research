@@ -43,7 +43,7 @@ tão similiar. Para os testes, usamos a biblioteca [`Prelude AdvPL`](https://git
 - Quando estourar o índice, torne a pesquisa um valor inexistente;
 - Enquanto não estourar, realize, cada vez, **1.000.000** de buscas, utilizando `aScan`, `HMGet`;
 - O número total de buscas será definido por `F(B).QN`, onde `Q` refere-se ao número total de elementos na estrutura e `N` refere-se à quantidade de buscas realizadas em cada elemento da estrutura.
-- 
+ 
 #### Resultados dos testes
 
 Através dos testes, obtivemos a seguinte saída:
@@ -114,3 +114,77 @@ acrescido de 1/3 do tempo médio para o próximo elemento.
 
 - HashMap: `P(HashMap).R`, onde `R` representa o elemento atual e não há acréscimo ou decréscimo de acordo com o número de elementos da estrutura. Nos nossos testes, o `HashMap` tomou 21,4% do tempo que o `array` tomou para realizar as
 mesmas operações. Conseguimos, com 18 elementos, um percentual de 78,6% (~5x) de ganho performático, sendo este exponencialmente maior de acordo com o número de elementos da estrutura. Foram realizados, em cada componente, **18.000.000** (18 milhões) de testes.
+
+##### Fontes utilizados
+
+```xbase
+#include "protheus.ch"
+#include "prelude.ch"
+#define ELEMENT_KEY 1
+Function TestHash()
+    Let aData <- { }
+    Let nI, nJ, nTimer, nAll, cSearch, nPos, xValue, oHash
+    On aData aAdd { "ER", "Erlang" }
+    On aData aAdd { "HS", "Haskell" }
+    On aData aAdd { "JV", "Java" }
+    On aData aAdd { "JS", "Javascript" }
+    On aData aAdd { "PL", "Perl" }
+    On aData aAdd { "OC", "OCaml" }
+    On aData aAdd { "CJ", "Clojure" }
+    On aData aAdd { "KO", "Kotlin" }
+    On aData aAdd { "BA", "BASIC" }
+    On aData aAdd { "PH", "PHP" }
+    On aData aAdd { "PY", "Python" }
+    On aData aAdd { "HB", "Harbour" }
+    On aData aAdd { "SC", "Scala" }
+    On aData aAdd { "CP", "C++" }
+    On aData aAdd { "GR", "Groovy" }
+    On aData aAdd { "LS", "Livescript" }
+    On aData aAdd { "AG", "Agda" }
+    nAll <- Seconds()
+    /**
+    * Using simple arrays.
+    */
+    For nI <- 1 To Len( aData ) + 1
+        If nI > Len( aData )
+            cSearch <- "ML"
+        Else
+            cSearch <- aData[ nI ][ ELEMENT_KEY ]
+            nTimer <- Seconds()
+            For nJ <- 1 To 1000000
+                nPos <- aScan( aData, { |X| X[ 1 ] Is cSearch } )
+            Next
+            nTimer <- Seconds() - nTimer
+            
+            ConOut("Searching for [" + cSearch + "] took " + ( cValToChar( nTimer ) ) + "s." )
+        EndIf
+    Next nI
+    nAll <- Seconds() - nAll
+
+    ConOut( "Took " + cValToChar( nAll ) + "s. with Array." )
+    ConOut( "" )
+    /**
+    * Using Hashtables (tHashMap).
+    */
+    nAll <- Seconds()
+    oHash <- aToHM( aData )
+    For nI <- 1 To Len( aData ) + 1
+        If nI > Len( aData )
+            cSearch <- "ML"
+        Else
+            cSearch <- aData[ nI ][ ELEMENT_KEY ]
+            nTimer <- Seconds()
+            For nJ <- 1 To 1000000
+                HMGet( oHash, cSearch, /* out */ @xValue )
+            Next nJ
+            nTimer <- Seconds() - nTimer
+
+            ConOut("Searching for [" + cSearch + "] took " + ( cValToChar( nTimer ) ) + "s." )
+        EndIf
+    Next nI
+    nAll <- Seconds() - nAll
+
+    ConOut( "Took " + cValToChar( nAll ) + "s. with HashMap." )
+    ConOut( "" )
+    Return
+```
