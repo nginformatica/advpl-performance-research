@@ -225,8 +225,8 @@ Static Function GetSyncPackage( oWS )
 #### Diferenças em segundos
 
 | Padrão | Otimizado |
-|-|-|
-| 3600+ | 14 |
+|--------|-----------|
+| 3600+  | 14        |
 
 
 ## Links úteis
